@@ -52,13 +52,14 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     gs = chessEngine.GameState()
+    loadImages()
     # print(gs.board) works!
     # Keep track of selected square - row and column
     selected_square = ()
     # 2 tuples containing the selected piece's current location and where the user moves it to
     player_clicks = []
 
-    loadImages()
+
     flag = True
 
     while flag:
@@ -72,7 +73,7 @@ def main():
                 row = location[1]//SQUARE_SIZE
                 # Do not let the user click the same square twice
                 # If the action occurs, undo the move
-                if selected_square == (row,col):
+                if selected_square == (row, col):
                     selected_square = ()
                     player_clicks = []
                 else:
@@ -81,8 +82,12 @@ def main():
 
                 # After the second click, perform the move and reset the player_clicks
                 if len(player_clicks) == 2:
-                        # TODO: Find out how to move the pieces based on selected squares
-
+                    move = chessEngine.Move(player_clicks[0], player_clicks[1], gs.board)
+                    print(move.getChessNotation())
+                    gs.makeMove(move)
+                    # Reset the move clicks so length becomes 0 again
+                    selected_square = ()
+                    player_clicks = []
 
         drawGameState(screen, gs)
         clock.tick(20) # Kept 20 Frames per second
