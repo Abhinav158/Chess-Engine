@@ -66,6 +66,11 @@ def main():
         for e in p.event.get():
             if e.type == p.QUIT:
                 flag = False
+            elif e.type == p.KEYDOWN:
+                # Undo functionality - press z key 
+                if e.key == p.K_z:
+                    gs.undoMove()
+
             elif e.type == p.MOUSEBUTTONDOWN:
                 # Grab the mouse location to move the piece
                 location = p.mouse.get_pos()
@@ -88,6 +93,7 @@ def main():
                     # Reset the move clicks so length becomes 0 again
                     selected_square = ()
                     player_clicks = []
+
 
         drawGameState(screen, gs)
         clock.tick(20) # Kept 20 Frames per second

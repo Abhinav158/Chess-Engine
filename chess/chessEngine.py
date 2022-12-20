@@ -20,13 +20,20 @@ class GameState():
         self.moveLog = []
 
     def makeMove(self, move):
-        # When we move a piece from (a,b) to (c,d), the piece disappears from initial (a,b)
+        # When we move a piece from (a,b) to (c,d), the piece disappears from initial position (a,b)
         self.board[move.startRow][move.startCol] = "xx"
         self.board[move.endRow][move.endCol] = move.pieceMoved
         # Append this move to the log and switch the player
         self.moveLog.append(move)
         self.whiteToPlay = not self.whiteToPlay
 
+    def undoMove(self):
+        # Just undo the most recent move
+        if len(self.moveLog) != 0:
+            move = self.moveLog.pop()
+            self.board[move.startRow][move.startCol] = move.pieceMoved
+            self.board[move.endRow][move.endCol] = move.pieceCaptured
+            self.whiteToPlay = not self.whiteToPlay
 
 class Move():
     # In chess, horizontal rows are called ranks - 6th rank, 3rd rank, etc.
