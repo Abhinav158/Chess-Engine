@@ -52,6 +52,9 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     gs = chessEngine.GameState()
+    # Get the list of all the valid moves
+    validMoves = gs.findValidMoves()
+    moveMade = False
     loadImages()
     # print(gs.board) works!
     # Keep track of selected square - row and column
@@ -67,9 +70,10 @@ def main():
             if e.type == p.QUIT:
                 flag = False
             elif e.type == p.KEYDOWN:
-                # Undo functionality - press z key 
+                # Undo functionality - press z key
                 if e.key == p.K_z:
                     gs.undoMove()
+                    moveMade = True
 
             elif e.type == p.MOUSEBUTTONDOWN:
                 # Grab the mouse location to move the piece
@@ -89,11 +93,21 @@ def main():
                 if len(player_clicks) == 2:
                     move = chessEngine.Move(player_clicks[0], player_clicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
-                    # Reset the move clicks so length becomes 0 again
-                    selected_square = ()
-                    player_clicks = []
+                    for i in range(len(validMoves)):
+                        if move == validMoves[i]:
+                        # if move in validMoves:
+                            gs.makeMove(validMoves[i])
+                            moveMade = True
+                            # Reset the move clicks so length becomes 0 again
+                            selected_square = ()
+                            player_clicks = []
+                    if not moveMade:
+                        player_clicks = [selected_square]
 
+        if moveMade:
+            # Generate a new set of valid moves after move is made
+            validMoves = gs.findValidMoves()
+            moveMade = False
 
         drawGameState(screen, gs)
         clock.tick(20) # Kept 20 Frames per second
