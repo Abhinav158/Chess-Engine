@@ -57,7 +57,7 @@ class GameState():
         if move.pieceMoved[1] == "P" and abs(move.startRow - move.endRow) == 2:
             self.enpassant = ((move.startRow + move.endRow)//2, move.endCol)
         else:
-            self.enpas
+            self.enpassant = ()
 
     def undoMove(self):
         # Just undo the most recent move
@@ -301,6 +301,12 @@ class Move():
             self.pawnPromotion = True
 
         self.enpassant = enpassant
+        if self.enpassant:
+            if self.pieceMoved == "bP":
+                self.pieceCaptured = "wP"
+            else:
+                self.pieceCaptured = "bP"
+        # enpassant Bug fixed
 
         # MoveID generated like a hash function
         self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol * 1
